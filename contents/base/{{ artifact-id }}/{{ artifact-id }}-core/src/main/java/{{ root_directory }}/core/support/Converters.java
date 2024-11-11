@@ -23,7 +23,7 @@ public class Converters {
     public static {{ entity_key | pascal_case }} to{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto {{ entity_key | camel_case }}Dto) {
         {{ entity_key | pascal_case }} {{ entity_key | camel_case }} = new {{ entity_key | pascal_case }}();
         {{ entity_key | camel_case }}.setId(UUID.fromString({{ entity_key | camel_case }}Dto.getId().getValue()));
-        {{ entity_key | camel_case }}.setName({{ entity_key | camel_case }}.getName());                        
+        {{ entity_key | camel_case }}.setName({{ entity_key | camel_case }}Dto.getName());                        
         return {{ entity_key | camel_case }};
     }
 {%- endfor %}
