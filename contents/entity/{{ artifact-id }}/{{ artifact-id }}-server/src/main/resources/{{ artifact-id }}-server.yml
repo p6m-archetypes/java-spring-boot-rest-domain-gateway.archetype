@@ -1,0 +1,30 @@
+server:
+  port: {{ service-port }}
+
+# Management (Hosted on Server Port)
+# https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints
+
+management:
+  server:
+    port: {{ management-port }}
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: {{ artifact-id }}
+
+core:
+  services:
+    {{ project-prefix }}-service:
+      host: "localhost"
+      port: "{{ service-port + 10 }}"

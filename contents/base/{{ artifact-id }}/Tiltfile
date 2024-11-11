@@ -1,0 +1,20 @@
+custom_build(
+  '{{ artifact-id }}-server',
+  'mvn install -Pdocker-build -DskipTests',
+  deps=['src'])
+
+k8s_yaml(kustomize('.platform/kubernetes/tilt'), allow_duplicates=True)
+
+k8s_resource(
+    workload='{{ artifact-id }}',
+    port_forwards=[
+        port_forward({{ service-port }}, 8080),
+        port_forward({{ management-port }}, 8081),
+        port_forward({{ debug-port }}, 5005),
+    ],
+    links=[
+        link('http://localhost:{{ service-port }}/swagger-ui.html', 'Swagger UI'),
+        link('http://localhost:{{ management-port }}/health', 'Health'),
+        link('http://localhost:{{ management-port }}/prometheus', 'Prometheus'),
+    ],
+)

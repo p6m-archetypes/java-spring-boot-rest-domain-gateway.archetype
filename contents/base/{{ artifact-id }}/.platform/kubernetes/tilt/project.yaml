@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ artifact-id }}-config
+  labels:
+    app: {{ artifact-id }}
+data:
+  GRPC_PORT: "8080"    # Service Port
+  SERVER_PORT: "8081"  # Management Port
+  LOGGING_STRUCTURED: "true"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ artifact-id }}
+  labels:
+    app: {{ artifact-id }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ artifact-id }}
+  template:
+    metadata:
+      labels:
+        app: {{ artifact-id }}
+    spec:
+      containers:
+        - name: {{ artifact-id }}-server
+          image: {{ artifact-id }}-server
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: {{ artifact-id }}-config
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ artifact-id }}
+  labels:
+    app: {{ artifact-id }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+    - name: management
+      port: 8081
+  selector:
+    app: {{ artifact-id }}
