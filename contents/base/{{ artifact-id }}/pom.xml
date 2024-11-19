@@ -22,7 +22,7 @@
     <properties>
         <{{ group-id }}.{{ org-solution-name }}-platform>{{ platform-version }}</{{ group-id }}.{{ org-solution-name }}-platform>{% for service_key in services %}
         {%- set service = services[service_key] %}
-        <{{service.group-id}}.{{ service.artifact-id }}.version>{{ platform-version }}</{{service.group-id}}.{{ service.artifact-id}}.version>{% endfor %}
+        <{{service.group-id}}.{{ service.artifact-id }}.version>1.0.0-SNAPSHOT</{{service.group-id}}.{{ service.artifact-id}}.version>{% endfor %}
     </properties>
 
     <modules>
