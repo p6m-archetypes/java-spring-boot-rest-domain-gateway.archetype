@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertiesPropertySource;
-import {{ group-id }}.platform.tracing.TracingInitializer;
+import {{ group_id }}.platform.tracing.TracingInitializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
