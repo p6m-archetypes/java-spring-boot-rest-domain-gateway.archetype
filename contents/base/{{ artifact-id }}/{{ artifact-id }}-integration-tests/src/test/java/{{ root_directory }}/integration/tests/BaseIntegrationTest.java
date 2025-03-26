@@ -15,7 +15,7 @@ import {{ service.root_package }}.grpc.v1.{{ service['ProjectName'] }}Grpc;
 {%- endfor %}
 import {{ root_package }}.integration.tests.config.IntegrationTestsConfig;
 import {{ root_package }}.server.{{ ProjectPrefix }}{{ ProjectSuffix }}Server;
-import {{ group_id }}.platform.test.GrpcMockClientConfigurer;
+import {{ root_package }}.integration.tests.grpc.GrpcMockClientConfigurer;
 
 
 @ExtendWith({SpringExtension.class, GrpcMockExtension.class})

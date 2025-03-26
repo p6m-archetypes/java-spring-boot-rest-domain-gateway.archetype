@@ -23,7 +23,7 @@ import static {{ service.root_package }}.grpc.v1.{{ service.ProjectName}}Grpc.*;
 public class {{ ProjectName }}IT extends BaseIntegrationTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final ParameterizedTypeReference<List<{{ EntityName }}>> {{ ENTITY_NAME }}_LIST_TYPEREF = new ParameterizedTypeReference<>() {
+    public static final ParameterizedTypeReference<List<{{ EntityName }}>> {{ ENTITY_NAME }}_LIST_TYPEREF = new ParameterizedTypeReference<List<{{ EntityName }}>>() {
     };
 
     private final String id   = UUID.randomUUID()
@@ -55,7 +55,7 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
         ResponseEntity<List<{{ EntityName }}>> response = restTemplate.exchange(baseUrl + "/api/v1/{{ entityName }}",
             HttpMethod.GET,
             null,
-            EXAMPLE_LIST_TYPEREF);
+            {{ ENTITY_NAME }}_LIST_TYPEREF);
 
         assertThat(response.getStatusCode()
                            .is2xxSuccessful()).isTrue();

@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertiesPropertySource;
-import {{ group_id }}.platform.tracing.TracingInitializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +14,6 @@ import java.util.Properties;
 public class {{ ProjectPrefix }}{{ ProjectSuffix }}Server {
 
     static {
-        TracingInitializer.initialize();
         if (System.getProperty("logging.config") == null) {
             System.setProperty("logging.config", "classpath:{{ artifact-id}}-server-logback.xml");
         }

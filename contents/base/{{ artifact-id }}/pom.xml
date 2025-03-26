@@ -3,26 +3,55 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>{{ group-id }}</groupId>
-        <artifactId>{{ org-solution-name }}-platform</artifactId>
-        <version>{{ platform-version }}</version>
-    </parent>
-
+    <groupId>{{ group-id }}</groupId>
     <artifactId>{{ artifact-id }}</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>{{ project-title }} :: Parent</name>
 
-    <scm>
-        <!--suppress MavenModelInspection -->
-        <developerConnection>scm:git:https://${env.BUILD_USER_NAME}:${env.BUILD_USER_KEY}@gitlab.com/${env.CI_PROJECT_NAMESPACE}/${env.CI_PROJECT_NAME}</developerConnection>
-    </scm>
-
     <properties>
-        <{{ group-id }}.{{ org-solution-name }}-platform>{{ platform-version }}</{{ group-id }}.{{ org-solution-name }}-platform>{% for service_key in services %}
+        <java.version>17</java.version>
+
+        <org.springframework.boot.version>3.4.3</org.springframework.boot.version>
+        <com.fasterxml.jackson.version>2.18.2</com.fasterxml.jackson.version>
+        <net.logstash.logback.version>6.6</net.logstash.logback.version>
+        <org.jacoco.version>0.8.12</org.jacoco.version>
+        <org.sonarsource.scanner.maven.version>5.0.0.4389</org.sonarsource.scanner.maven.version>
+        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+        <jakarta.annotations.version>3.0.0</jakarta.annotations.version>
+        <commons.io.version>2.18.0</commons.io.version>
+        <org.springdoc.openapi.starter.version>2.8.5</org.springdoc.openapi.starter.version>
+        <org.grpcmock.version>0.15.0</org.grpcmock.version>
+
+        {%- for service_key in services -%}
         {%- set service = services[service_key] %}
         <{{service.group-id}}.{{ service.artifact-id }}.version>1.0.0-SNAPSHOT</{{service.group-id}}.{{ service.artifact-id}}.version>{% endfor %}
+
+        <!-- Build Settings -->
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>{{ group-id }}</sonar.organization>
+        <sonar.aggregateReportDirectory>../target/site/jacoco-aggregate</sonar.aggregateReportDirectory>
+        <sonar.aggregateReportFile>${sonar.aggregateReportDirectory}/jacoco.xml</sonar.aggregateReportFile>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,${sonar.aggregateReportFile}
+        </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.exclusions>
+            **/{{ ProjectName }}Server.java,
+            **/RootController.java
+        </sonar.coverage.exclusions>
+
+        <!-- Plugins -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>3.1.0</maven-deploy-plugin.version>
+        <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
+        <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
+        <maven-jib-plugin.version>3.4.1</maven-jib-plugin.version>
+        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     </properties>
 
     <modules>
@@ -32,29 +61,132 @@
         <module>{{ artifact-id }}-server</module>
     </modules>
 
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>{{ org-solution-name }}-libs-release</name>
+            <url>https://{{ artifactory-host }}/artifactory/{{ org-solution-name }}-libs-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>{{ org-solution-name }}-libs-snapshot</name>
+            <url>https://{{ artifactory-host }}/artifactory/{{ org-solution-name }}-libs-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
-        <!-- Common Testing/Logging Dependencies and Scopes defined in {{ org-solution-name }}-platform. -->
+        
     </dependencies>
 
     <dependencyManagement>
-        <dependencies>{% for service_key in services %}
-            {%- set service = services[service_key] %}
-            <dependency>
-                <groupId>{{ service.group-id }}</groupId>
-                <artifactId>{{ service.artifact-id}}-bom</artifactId>
-                <version>${{'{'}}{{ service.group-id }}.{{ service.artifact-id}}.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>{% endfor %}
-            <dependency>
-                <groupId>{{ group-id }}</groupId>
-                <artifactId>{{ org-solution-name }}-platform-bom</artifactId>
-                <version>${{'{'}}{{ group-id }}.{{ org-solution-name }}-platform{{'}'}}</version>
+        <dependencies>           
+           <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Common Third-Party Dependency Management defined in {{ org-solution-name }}-dependencies. Import Service BOMs here.-->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${org.springdoc.openapi.starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${net.logstash.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${org.springframework.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${org.jacoco.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${org.sonarsource.scanner.maven.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -14,10 +14,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-solution-name }}-platform-errorhandling</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>{% for service_key in services %}
@@ -25,6 +21,7 @@
         <dependency>
             <groupId>{{ service.group-id }}</groupId>
             <artifactId>{{ service.artifact-id }}-client</artifactId>
+            <version>${{'{'}}{{ service.group-id }}.{{ service.artifact-id}}.version}</version>
         </dependency>{% endfor %}
     </dependencies>
 
