@@ -2,7 +2,7 @@
 
 **// TODO:** Add description of your project's business function.
 
-Generated from the [Java Spring Boot REST Domain Gateway Archetype](https://github.com/p6m-dev/java-spring-boot-rest-domain-gateway-archetype). 
+Generated from the [Java Spring Boot REST Domain Gateway Archetype](https://github.com/p6m-archetypes/java-spring-boot-rest-domain-gateway-archetype). 
 
 [[_TOC_]]
 
