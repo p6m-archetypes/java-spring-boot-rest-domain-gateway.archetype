@@ -157,6 +157,11 @@
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${org.sonarsource.scanner.maven.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${org.springframework.boot.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
