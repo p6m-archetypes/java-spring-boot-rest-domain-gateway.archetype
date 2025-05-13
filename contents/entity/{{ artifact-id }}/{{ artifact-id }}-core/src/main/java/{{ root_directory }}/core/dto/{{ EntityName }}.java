@@ -6,6 +6,13 @@ public class {{EntityName}} {
     private UUID id;
     private String name;
 
+    public {{EntityName}}() {}
+
+    public {{EntityName}}(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public UUID getId() {
         return id;
     }

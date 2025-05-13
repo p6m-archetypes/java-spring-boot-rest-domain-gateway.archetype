@@ -24,30 +24,30 @@ For information on Spring-specific tasks, see the [Spring Boot Maven Plugin](htt
 
 This is a multi-module project. To run a goal in a particular module, use the `-f` flag.
 
-## Running the Server
+## Run Server
+Before starting the server, you must first create the application jars:
+```bash
+mvn install
+```
+
+From the project root, run
+```bash
+mvn -f {{ artifact-id }}-server spring-boot:run
+```
 This server accepts connections on the following ports:
 - {{ service-port }}: used for application REST Service traffic.
 - {{ management-port }}: used to monitor the application over HTTP (see [Actuator endpoints](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints)).
 
-Before starting the server, you must first create the application jars:
-```bash
-$ mvn install
-```
+To run the server in a non-blocking fashion, refer to the `spring-boot:start` and `spring-boot:stop` goals.
 
+### Swagger (OpenAPI)
+[Swagger UI](http://localhost:{{ service-port }}/swagger-ui.html)
+
+### Health Checks
 Next, start the server locally or using Docker. You can verify things are up and running by looking at the [/health](http://localhost:{{ management-port }}/health) endpoint:
 ```bash
-$ curl localhost:{{ management-port }}/health
+curl localhost:{{ management-port }}/health
 ```
-
-Swagger UI [here](http://localhost:{{ service-port }}/swagger-ui.html)
-
-
-### Local
-From the project root, run
-```bash
-$ mvn -f {{ artifact-id }}-server spring-boot:run
-```
-To run the server in a non-blocking fashion, refer to the `spring-boot:start` and `spring-boot:stop` goals.
 
 ## Runtime Switches
 

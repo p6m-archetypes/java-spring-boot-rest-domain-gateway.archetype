@@ -25,6 +25,11 @@ management:
 
 core:
   services:
-    {{ project-prefix }}-service:
+    {% if use-default-service == false %}
+    {%- for service_key in services -%}
+    {%- set service = services[service_key] %}
+    {{ service.project-name }}:
       host: "localhost"
-      port: "{{ service-port + 10 }}"
+      port: "{{ service.service-port }}"
+      {% endfor %}{% endif %}
+

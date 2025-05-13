@@ -22,11 +22,7 @@ context += set("service-port", 9000);
 context += set("management-port", context["service-port"] + 1);
 context += set("debug-port", context["service-port"] + 9);
 
-if ANSWERS.services != () {
-    context.services = ANSWERS.services;
-} else {
-    context.services = default_services(context);
-}
+context += render(Archetype("grpc-services-integration"), ANSWERS + context , render_settings);
 
 if switch_enabled("debug-context") {
     log(Info, `${archetect::archetype::description()} (${context["project-name"]}) Context:`);

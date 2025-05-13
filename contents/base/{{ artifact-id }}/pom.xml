@@ -22,10 +22,14 @@
         <commons.io.version>2.18.0</commons.io.version>
         <org.springdoc.openapi.starter.version>2.8.5</org.springdoc.openapi.starter.version>
         <org.grpcmock.version>0.15.0</org.grpcmock.version>
+        <com.google.protobuf.protoc.version>4.30.1</com.google.protobuf.protoc.version>
+        <io.grpc.version>1.71.0</io.grpc.version>
+        <guava.version>33.4.0-jre</guava.version>
 
+        {% if use-default-service == false %}
         {%- for service_key in services -%}
         {%- set service = services[service_key] %}
-        <{{service.group-id}}.{{ service.artifact-id }}.version>1.0.0-SNAPSHOT</{{service.group-id}}.{{ service.artifact-id}}.version>{% endfor %}
+        <{{service.group-id}}.{{ service.artifact-id }}.version>1.0.0-SNAPSHOT</{{service.group-id}}.{{ service.artifact-id}}.version>{% endfor %}{% endif %}
 
         <!-- Build Settings -->
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -117,6 +121,22 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${com.google.protobuf.protoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

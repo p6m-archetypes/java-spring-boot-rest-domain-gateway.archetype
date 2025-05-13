@@ -1,5 +1,6 @@
 package {{ root_package }}.core.support;
 
+{% if use-default-service == false %}
 {% for service_key in services -%}
 {% set service = services[service_key] %}
 {%- for entity_key in service.model.entities -%}
@@ -8,6 +9,7 @@ import {{ service.root_package }}.grpc.v1.{{ entity_key | pascal_case }}Dto;
 import {{ root_package }}.core.dto.{{ entity_key | pascal_case }};
 {%- endfor %}
 {%- endfor %}
+{% endif %}
 import java.util.UUID;
 
 public class Converters {
@@ -15,6 +17,7 @@ public class Converters {
     private Converters() {
     }
 
+{% if use-default-service == false %}
 {%- for service_key in services -%}
 {% set service = services[service_key] %}
 {%- for entity_key in service.model.entities -%}
@@ -28,5 +31,6 @@ public class Converters {
     }
 {%- endfor %}
 {%- endfor %}
+{% endif %}
 
 }

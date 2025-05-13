@@ -10,17 +10,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import {{ root_package }}.core.dto.Create{{ EntityName }}RequestDto;
 import {{ root_package }}.core.dto.{{ EntityName }};
-import {{ root_package }}.core.dto.Update{{ EntityName }}RequestDto;
-import {{ service.root_package }}.grpc.v1.*;
+import {{ root_package }}.core.dto.Update{{ EntityName }}RequestDto;{% if use-default-service == false %}
+import {{ service.root_package }}.grpc.v1.*;{% endif %}
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.grpcmock.GrpcMock.*;
-import static {{ service.root_package }}.grpc.v1.{{ service.ProjectName}}Grpc.*;
+import static org.grpcmock.GrpcMock.*;{% if use-default-service == false %}
+import static {{ service.root_package }}.grpc.v1.{{ service.ProjectName}}Grpc.*;{% endif %}
 
-public class {{ ProjectName }}IT extends BaseIntegrationTest {
+public class {{ service.ProjectName }}IT extends BaseIntegrationTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final ParameterizedTypeReference<List<{{ EntityName }}>> {{ ENTITY_NAME }}_LIST_TYPEREF = new ParameterizedTypeReference<List<{{ EntityName }}>>() {
@@ -30,15 +30,15 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
                               .toString();
     private final String name = "name_" + UUID.randomUUID();
 
-
+    {% if use-default-service == false %}
     @Test
 //    @WithJWTUser(userId = USER_ID_STR, identityProvider = IdentityProvider.AUTH0, identityProviderId = "111")
     void test_Get{{ EntityName }}ById() {
         stubGet{{ EntityName }}();
 
-        String baseUrl = "http://localhost:" + {{ entityName }}DomainGateway.getServerPort();
+        String baseUrl = "http://localhost:" + {{ projectName }}.getServerPort();
 
-        ResponseEntity<{{ EntityName }}> response = restTemplate.getForEntity(baseUrl + "/api/v1/{{ entityName }}/" + id, {{ EntityName }}.class);
+        ResponseEntity<{{ EntityName }}> response = restTemplate.getForEntity(baseUrl + "/api/v1/{{ entityName | pluralize }}/" + id, {{ EntityName }}.class);
 
         assertThat(response.getStatusCode()
                            .is2xxSuccessful()).isTrue();
@@ -51,8 +51,8 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
     @Test
     void test_Get{{ EntityName | pluralize }}() {
         stubGet{{ EntityName | pluralize }}();
-        String baseUrl = "http://localhost:" + {{ entityName }}DomainGateway.getServerPort();
-        ResponseEntity<List<{{ EntityName }}>> response = restTemplate.exchange(baseUrl + "/api/v1/{{ entityName }}",
+        String baseUrl = "http://localhost:" + {{ projectName }}.getServerPort();
+        ResponseEntity<List<{{ EntityName }}>> response = restTemplate.exchange(baseUrl + "/api/v1/{{ entityName | pluralize }}",
             HttpMethod.GET,
             null,
             {{ ENTITY_NAME }}_LIST_TYPEREF);
@@ -69,11 +69,11 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
     void test_Create{{ EntityName }}() {
         stubCreate{{ EntityName }}();
 
-        String baseUrl = "http://localhost:" + {{ entityName }}DomainGateway.getServerPort();
+        String baseUrl = "http://localhost:" + {{ projectName }}.getServerPort();
         Create{{ EntityName }}RequestDto request = new Create{{ EntityName }}RequestDto();
         request.setName(name);
 
-        ResponseEntity<{{ EntityName }}> response = restTemplate.postForEntity(baseUrl + "/api/v1/{{ entityName }}",
+        ResponseEntity<{{ EntityName }}> response = restTemplate.postForEntity(baseUrl + "/api/v1/{{ entityName | pluralize }}",
             request,
             {{ EntityName }}.class);
 
@@ -96,7 +96,7 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
     void test_Update{{ EntityName }}() {
         stubUpdate{{ EntityName }}();
 
-        String baseUrl = "http://localhost:" + {{ entityName }}DomainGateway.getServerPort();
+        String baseUrl = "http://localhost:" + {{ projectName }}.getServerPort();
         Update{{ EntityName }}RequestDto request = new Update{{ EntityName }}RequestDto();
         request.setName(name + "_updated");
 
@@ -126,12 +126,12 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
     void test_Delete{{ EntityName }}() {
         stubDelete{{ EntityName }}();
 
-        String baseUrl = "http://localhost:" + {{ entityName }}DomainGateway.getServerPort();
+        String baseUrl = "http://localhost:" + {{ projectName }}.getServerPort();
         Update{{ EntityName }}RequestDto request = new Update{{ EntityName }}RequestDto();
         request.setName(name + "_updated");
 
         ResponseEntity<Void> response = restTemplate.exchange(
-            baseUrl + "/api/v1/{{ entityName }}/" + id,
+            baseUrl + "/api/v1/{{ entityName | pluralize }}/" + id,
             HttpMethod.DELETE,
             null,
             Void.class);
@@ -211,4 +211,5 @@ public class {{ ProjectName }}IT extends BaseIntegrationTest {
                          .setId(StringValue.of(id))
                          .setName(name);
     }
+    {% endif %}
 }

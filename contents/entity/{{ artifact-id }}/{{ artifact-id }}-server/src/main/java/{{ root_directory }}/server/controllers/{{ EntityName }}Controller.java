@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/{{ entityName }}")
+@RequestMapping("/api/v1/{{ entityName | pluralize }}")
 @Tag(name = "{{ EntityName }} API", description = "{{ EntityName }} API description")
 public class {{ EntityName }}Controller {
     private final {{ ProjectName }}Core service;

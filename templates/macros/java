@@ -1,0 +1,68 @@
+{% macro core_implementation_methods(entity_key, entity, model, service) -%}
+    public {{ entity_key | pascal_case }} {{ entity_key | camel_case }}(String id) {
+        Get{{ entity_key | pascal_case }}Response response = {{ service["projectName"] }}.get{{ entity_key | pascal_case }}(Get{{ entity_key | pascal_case }}Request.newBuilder()
+                                                             .setId(id)
+                                                             .build());
+        return Converters.to{{ entity_key | pascal_case }}(response.get{{ entity_key | pascal_case }}());
+    }
+
+    public List<{{ entity_key | pascal_case }}> {{ entity_key | camel_case | pluralize }}() {
+        Get{{ entity_key | pascal_case | pluralize }}Request request = Get{{ entity_key | pascal_case | pluralize }}Request.newBuilder()
+                                                 .setStartPage(0)
+                                                 .setPageSize(10)
+                                                 .build();
+        Get{{ entity_key | pascal_case | pluralize }}Response response = {{ service["projectName"] }}.get{{ entity_key | pascal_case | pluralize }}(request);
+        return response.get{{ entity_key | pascal_case }}List()
+                                   .stream()
+                                   .map(Converters::to{{ entity_key | pascal_case }})
+                                   .collect(Collectors.toList());
+    }
+
+    public {{ entity_key | pascal_case }} create{{ entity_key | pascal_case }}(Create{{ entity_key | pascal_case}}RequestDto {{ entity_key | camel_case }}) {
+        Create{{ entity_key | pascal_case }}Response response = {{ service["projectName"] }}.create{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto.newBuilder()
+                                                                 .setName({{ entity_key | camel_case }}.getName())
+                                                                 .build());
+        return Converters.to{{ entity_key | pascal_case }}(response.get{{ entity_key | pascal_case }}());
+    }
+
+    public {{ entity_key | pascal_case }} update{{ entity_key | pascal_case }}(UUID id, Update{{ entity_key | pascal_case}}RequestDto {{ entity_key | camel_case }}) {
+        Update{{ entity_key | pascal_case }}Response response = {{ service["projectName"] }}.update{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto.newBuilder()
+                                                                 .setId(StringValue.of(id.toString()))
+                                                                 .setName({{ entity_key | camel_case }}.getName())
+                                                                 .build());
+        return Converters.to{{ entity_key | pascal_case }}(response.get{{ entity_key | pascal_case }}());
+    }
+
+    public Boolean delete{{ entity_key | pascal_case }}(UUID id) {
+        Delete{{ entity_key | pascal_case }}Response response = {{ service["projectName"] }}.delete{{ entity_key | pascal_case }}(Delete{{ entity_key | pascal_case }}Request.newBuilder()
+                                                                     .setId(id.toString())
+                                                                     .build());
+        return true;
+    }
+{%- endmacro %}
+
+{% macro core_implementation_methods_defaults(entity_key, entity, model) -%}
+    public {{ entity_key | pascal_case }} {{ entity_key | camel_case }}(String id) {
+        return new {{ entity_key | pascal_case }}(UUID.fromString(id), "Test 1");
+    }
+
+    public List<{{ entity_key | pascal_case }}> {{ entity_key | camel_case | pluralize }}() {
+        return List.of(
+            new {{ entity_key | pascal_case }}(UUID.randomUUID(), "Test 1"),
+            new {{ entity_key | pascal_case }}(UUID.randomUUID(), "Test 2")
+        );
+    }
+
+    public {{ entity_key | pascal_case }} create{{ entity_key | pascal_case }}(Create{{ entity_key | pascal_case}}RequestDto dto) {
+        return new {{ entity_key | pascal_case }}(UUID.randomUUID(), dto.getName());
+    }
+
+    public {{ entity_key | pascal_case }} update{{ entity_key | pascal_case }}(UUID id, Update{{ entity_key | pascal_case}}RequestDto dto) {
+
+        return new {{ entity_key | pascal_case }}(id, dto.getName());
+    }
+
+    public Boolean delete{{ entity_key | pascal_case }}(UUID id) {
+        return true;
+    }
+{%- endmacro %}

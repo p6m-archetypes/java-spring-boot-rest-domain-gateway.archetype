@@ -16,13 +16,26 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-        </dependency>{% for service_key in services %}
+        </dependency>
+         <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        {% if use-default-service == false %}{% for service_key in services %}
         {%- set service = services[service_key] %}
         <dependency>
             <groupId>{{ service.group-id }}</groupId>
             <artifactId>{{ service.artifact-id }}-client</artifactId>
             <version>${{'{'}}{{ service.group-id }}.{{ service.artifact-id}}.version}</version>
-        </dependency>{% endfor %}
+        </dependency>{% endfor %}{% endif %}
     </dependencies>
 
 </project>
