@@ -17,4 +17,4 @@ jobs:
       target-env: stg
       tag: ${{'{'}}{ inputs.tag }}
     secrets:
-      TOKEN: ${{'{'}}{ secrets.UPDATE_MANIFEST_TOKEN }}
+      TOKEN: ${{'{'}}{ secrets.P6M_UPDATE_MANIFEST_TOKEN }}
