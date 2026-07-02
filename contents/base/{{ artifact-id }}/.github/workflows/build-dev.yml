@@ -10,9 +10,9 @@ jobs:
     name: Build and Deploy
     uses: p6m-dev/github-actions/.github/workflows/build-deploy-maven.yaml@main
     secrets:
-      ARTIFACTORY_USERNAME: ${{'{'}}{ secrets.ARTIFACTORY_USERNAME }}
-      ARTIFACTORY_IDENTITY_TOKEN: ${{'{'}}{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
-      UPDATE_MANIFEST_TOKEN: ${{'{'}}{ secrets.UPDATE_MANIFEST_TOKEN }}
+      ARTIFACTORY_USERNAME: ${{'{'}}{ secrets.P6M_ARTIFACTORY_USERNAME }}
+      ARTIFACTORY_IDENTITY_TOKEN: ${{'{'}}{ secrets.P6M_ARTIFACTORY_IDENTITY_TOKEN }}
+      UPDATE_MANIFEST_TOKEN: ${{'{'}}{ secrets.P6M_UPDATE_MANIFEST_TOKEN }}
     with:
-      ARTIFACTORY_HOSTNAME: ${{'{'}}{ vars.ARTIFACTORY_HOSTNAME }}
+      ARTIFACTORY_HOSTNAME: ${{'{'}}{ vars.P6M_ARTIFACTORY_HOSTNAME }}
       JAVA_VERSION: "21"
