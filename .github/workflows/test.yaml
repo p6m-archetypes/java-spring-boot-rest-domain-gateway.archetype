@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   test:
+    name: Archetype Test
     uses: p6m-archetypes/archetype-test-harness/.github/workflows/archetype-test.yaml@main
     with:
       harness-ref: main
