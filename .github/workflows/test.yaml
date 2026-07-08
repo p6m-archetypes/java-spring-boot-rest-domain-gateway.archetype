@@ -1,0 +1,24 @@
+name: Test Archetype
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    uses: p6m-archetypes/archetype-test-harness/.github/workflows/archetype-test.yaml@main
+    with:
+      harness-ref: main
+      # This archetype uses a Rhai script and requires archetect 2.x;
+      # 2.x versions are installed as archetect2, which the harness resolves automatically
+      archetect-version: "2.1.2"
+      toolchain: java
+      toolchain-version: "21.x"
+    secrets: inherit
