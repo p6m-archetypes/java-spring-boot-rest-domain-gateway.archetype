@@ -10,5 +10,4 @@ public class Create{{ EntityName }}RequestDto {
     public void setName(String name) {
         this.name = name;
     }
-    fail
 }
