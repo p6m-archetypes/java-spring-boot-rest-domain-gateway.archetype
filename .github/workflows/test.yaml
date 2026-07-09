@@ -14,7 +14,7 @@ concurrency:
 jobs:
   test:
     name: Archetype Test
-    uses: p6m-archetypes/archetype-test-harness/.github/workflows/archetype-test.yaml@main
+    uses: p6m-workflows/archetype-test/.github/workflows/workflow.yml@v1
     with:
       harness-ref: main
       # This archetype uses a Rhai script and requires archetect 2.x;
